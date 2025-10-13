@@ -35,8 +35,7 @@ PhonemeDF/
 
 ## Example Phoneme Alignment (TextGrid Visualization)
 
-The figure below shows an example TextGrid visualization on Praat from PhonemeDF
-Each tier corresponds to one phoneme, with start and end times aligned in seconds.
+The figure below shows an example TextGrid visualization on Praat from PhonemeDF. Each tier corresponds to one phoneme, with start and end times aligned in seconds.
 
 ![TextGrid Example](assets/textgrid_samples/Example_TextGrid_Image.png)
 
