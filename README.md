@@ -30,7 +30,7 @@ PhonemeDF/
 The figure below shows an example TextGrid visualization
 Each tier corresponds to one phoneme, with start and end times aligned in seconds.
 
-![TextGrid Example](assets/textgrid_samples/example_textgrid_visual.png)
+![TextGrid Example](assets/textgrid_samples/Example_TextGrid_Image.png)
 
 *Figure: Example TextGrid showing phoneme boundaries for Real and MeloTTS speech
 aligned using Montreal Forced Aligner (MFA). Each block corresponds to one phoneme.*
