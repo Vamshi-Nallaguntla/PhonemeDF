@@ -3,8 +3,8 @@ This repository shows example **PhonemeDF**, a phoneme-level framework for analy
 
 ---
 
-## 🧩 Repository Structure
-
+## Repository Structure
+```
 PhonemeDF/
 │
 ├── assets/
@@ -23,9 +23,10 @@ PhonemeDF/
 │
 ├── index.html              # Interactive demo page to our dataset(e.g., for listening and comparing samples)
 │
-└── README.md                # Repository documentation (the file you’re reading now)
+└── README.md               # Repository documentation (the file you’re reading now)
+```
 
-## 🎛️ Example Phoneme Alignment (TextGrid Visualization)
+## Example Phoneme Alignment (TextGrid Visualization)
 
 The figure below shows an example TextGrid visualization
 Each tier corresponds to one phoneme, with start and end times aligned in seconds.
