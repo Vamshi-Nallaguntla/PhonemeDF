@@ -128,10 +128,9 @@
     © <span id="yr"></span> PhonemeDF Dataset
   </footer>
 
-  <!-- ===================== DATA (edit this) ===================== -->
+  <!-- ===================== DATA ===================== -->
   <script>
-    // Change these paths to match your repo. Suggest storing assets under /assets/... in the same repo.
-    const BASE = '/PhonemeDF'; // empty means relative to current site; e.g., '/AudioDF' if needed
+    const BASE = '/PhonemeDF'; 
 
     // 10 reference voices (update names/paths). Keep WAV at 16 kHz.
     const referenceVoices = [
@@ -147,7 +146,6 @@
       { id: 'ref_p256', name: 'p273 (M)', wav: `${BASE}/assets/ref/p273_023.wav`, note: 'Male reference' },
     ];
 
-    // Datasets: provide 1–2 items each. You can add more.
     // type: 'real' | 'tts' | 'vc'
     const datasetSamples = [
       {
