@@ -45,7 +45,7 @@ The figure below shows an example TextGrid visualization on Praat from PhonemeDF
 
 ## How to Use and Cite
 
-The dataset and citation details will be shared here once our paper is accepted.  
+The dataset, code and citation details will be shared here once our paper is accepted.  
 Stay tuned for the official release!
 
 ---
