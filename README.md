@@ -6,6 +6,8 @@ This repository shows samples from **PhonemeDF**, a phoneme-level dataset framew
 ## Block Diagram
 ![Block Diagram](assets/textgrid_samples/final_datasets_block_diagram.png)
 
+---
+
 ## Repository Structure
 ```
 PhonemeDF/
@@ -29,6 +31,8 @@ PhonemeDF/
 └── README.md               # Repository documentation (the file you’re reading now)
 ```
 
+---
+
 ## Example Phoneme Alignment (TextGrid Visualization)
 
 The figure below shows an example TextGrid visualization on Praat from PhonemeDF
@@ -37,6 +41,8 @@ Each tier corresponds to one phoneme, with start and end times aligned in second
 ![TextGrid Example](assets/textgrid_samples/Example_TextGrid_Image.png)
 
 *Figure: Example TextGrid showing phoneme boundaries aligned using Montreal Forced Aligner (MFA). Each block corresponds to one phoneme.*
+
+---
 
 ## How to Use and Cite
 
