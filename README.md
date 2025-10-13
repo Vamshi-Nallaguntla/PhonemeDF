@@ -3,6 +3,9 @@ This repository shows example **PhonemeDF**, a phoneme-level framework for analy
 
 ---
 
+## Block Diagram
+![Block Diagram](assets/textgrid_samples/final_datasets_block_diagram.png)
+
 ## Repository Structure
 ```
 PhonemeDF/
