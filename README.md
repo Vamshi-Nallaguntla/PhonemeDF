@@ -38,5 +38,10 @@ Each tier corresponds to one phoneme, with start and end times aligned in second
 
 *Figure: Example TextGrid showing phoneme boundaries aligned using Montreal Forced Aligner (MFA). Each block corresponds to one phoneme.*
 
+## How to Use and Cite
+
+The dataset and citation details will be shared here once our paper is accepted.  
+Stay tuned for the official release!
+
 ---
 
