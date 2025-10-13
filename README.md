@@ -1,5 +1,5 @@
 # PhonemeDF
-This repository shows example **PhonemeDF**, a phoneme-level framework for analyzing the discriminability between *real* and *synthetic* speech across modern **TTS (Text-to-Speech)** and **VC (Voice Conversion)** systems.
+This repository shows samples from **PhonemeDF**, a phoneme-level dataset framework created using the recent **TTS (Text-to-Speech)** and **VC (Voice Conversion)** systems.
 
 ---
 
@@ -31,13 +31,12 @@ PhonemeDF/
 
 ## Example Phoneme Alignment (TextGrid Visualization)
 
-The figure below shows an example TextGrid visualization
+The figure below shows an example TextGrid visualization on Praat from PhonemeDF
 Each tier corresponds to one phoneme, with start and end times aligned in seconds.
 
 ![TextGrid Example](assets/textgrid_samples/Example_TextGrid_Image.png)
 
-*Figure: Example TextGrid showing phoneme boundaries for Real and MeloTTS speech
-aligned using Montreal Forced Aligner (MFA). Each block corresponds to one phoneme.*
+*Figure: Example TextGrid showing phoneme boundaries aligned using Montreal Forced Aligner (MFA). Each block corresponds to one phoneme.*
 
 ---
 
