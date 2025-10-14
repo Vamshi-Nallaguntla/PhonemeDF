@@ -43,6 +43,19 @@ The figure below shows an example TextGrid visualization on Praat from PhonemeDF
 
 ---
 
+
+## Demo Website
+
+Check out the PhonemeDF demo:  
+[https://anonymous.4open.science/w/PhonemeDF-734D/](https://anonymous.4open.science/w/PhonemeDF-734D/)
+
+Listen to real vs. synthetic samples, the reference voices we used, and browse example TextGrids.  
+To inspect alignments, download files from `assets/textgrid_samples/` and open them in **Praat** (or any TextGrid viewer).
+
+
+
+---
+
 ## How to Use and Cite
 
 The dataset, code and citation details will be shared here once our paper is accepted.  
