@@ -14,12 +14,30 @@
   <!-- Wavesurfer.js for waveform + regions -->
   <script src="https://unpkg.com/wavesurfer.js@7"></script>
   <script src="https://unpkg.com/wavesurfer.js@7/dist/plugins/regions.min.js"></script>
+
   <style>
     /* Subtle card shadow */
     .card { box-shadow: 0 10px 20px rgba(0,0,0,0.06); }
-    .badge { @apply text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200; }
-    .pill { @apply text-xs px-2 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100; }
+    /* Replace Tailwind @apply with plain CSS for CDN mode */
+    .badge {
+      font-size: 0.75rem; line-height: 1rem;
+      padding: 0.125rem 0.5rem; border-radius: 9999px;
+      background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0;
+      display: inline-block;
+    }
+    .pill {
+      font-size: 0.75rem; line-height: 1rem;
+      padding: 0.25rem 0.5rem; border-radius: 9999px;
+      background: #eef2ff; color: #4338ca; border: 1px solid #e0e7ff;
+      display: inline-block;
+    }
   </style>
+
+  <script>
+    // Build absolute URLs that work on 4open (and other static hosts)
+    const ROOT = new URL('.', window.location.href).toString();
+    const asset = (p) => new URL(String(p).replace(/^\/+/, ''), ROOT).toString();
+  </script>
 </head>
 <body class="bg-slate-50 text-slate-900">
   <!-- Header -->
@@ -45,8 +63,9 @@
         <h2 class="text-3xl font-bold tracking-tight mb-3">Example Audios • Example TextGrids</h2>
         <p class="text-slate-700 leading-relaxed">
           This page shows examples from the <span class="font-semibold">PhonemeDF</span> project: the ten reference voices, per-dataset samples (real & synthetic), and downloadable example 
-          <span class="font-semibold">TextGrids</span>.</p>
-          <div class="flex flex-wrap gap-2 mt-4" aria-label="Audio and TextGrid Info Badges">
+          <span class="font-semibold">TextGrids</span>.
+        </p>
+        <div class="flex flex-wrap gap-2 mt-4" aria-label="Audio and TextGrid Info Badges">
           <span class="badge" title="All audio examples are in 16 kHz mono WAV format">Audios are in 16 kHz wav format</span>
           <span class="badge" title="TextGrids generated using Montreal Forced Aligner (MFA)">TextGrids are from MFA</span>
         </div>
@@ -92,11 +111,13 @@
       <div class="grid md:grid-cols-5 gap-3 items-end">
         <div class="md:col-span-2">
           <label class="text-sm font-medium">Audio (WAV, 16 kHz)</label>
-          <input id="tgAudio" type="text" class="mt-1 w-full rounded-xl border-slate-300 focus:ring-indigo-500 focus:border-indigo-500" placeholder="/assets/examples/utt01.wav" />
+          <!-- removed leading slash -->
+          <input id="tgAudio" type="text" class="mt-1 w-full rounded-xl border-slate-300 focus:ring-indigo-500 focus:border-indigo-500" placeholder="assets/examples/utt01.wav" />
         </div>
         <div class="md:col-span-2">
           <label class="text-sm font-medium">TextGrid</label>
-          <input id="tgFile" type="text" class="mt-1 w-full rounded-xl border-slate-300 focus:ring-indigo-500 focus:border-indigo-500" placeholder="/assets/examples/utt01.TextGrid" />
+          <!-- removed leading slash -->
+          <input id="tgFile" type="text" class="mt-1 w-full rounded-xl border-slate-300 focus:ring-indigo-500 focus:border-indigo-500" placeholder="assets/examples/utt01.TextGrid" />
         </div>
         <button id="tgLoad" class="md:col-span-1 h-10 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700">Load</button>
       </div>
@@ -113,14 +134,6 @@
     <div class="bg-white rounded-2xl card p-6">
       <h3 class="text-2xl font-bold mb-2">How to Use & Cite</h3>
       <p class="text-slate-700">We will update this once accepted.</p>
-      <ul class="list-disc ml-6 mt-3 text-slate-700">
-      <!--<p class="text-slate-700">Put your WAV and TextGrid files under <code>/assets/</code> in this repo. Update the metadata below and push—GitHub Pages redeploys automatically. For citation, include a link to this page and the commit hash. You can also add a <code>CITATION.cff</code> file at the repo root.</p>
-      <ul class="list-disc ml-6 mt-3 text-slate-700">
-        <li><span class="font-medium">Licensing:</span> Add <code>LICENSE</code> clarifying research use.</li>
-        <li><span class="font-medium">Provenance:</span> Keep per-file JSON with generator (XTTS/FreeVC/etc.), reference ID, transcript.</li>
-        <li><span class="font-medium">Repro:</span> Provide scripts to regenerate examples from source IDs.</li>
-      </ul> 
-      -->
     </div>
   </section>
 
@@ -130,70 +143,70 @@
 
   <!-- ===================== DATA ===================== -->
   <script>
-    const BASE = '/PhonemeDF'; 
+    // NO BASE needed. Use asset('assets/...') everywhere.
 
-    // 10 reference voices (update names/paths). Keep WAV at 16 kHz.
+    // 10 reference voices
     const referenceVoices = [
-      { id: 'ref_p228', name: 'p228 (F)', wav: `${BASE}/assets/ref/p228_023.wav`, note: 'Female reference' },
-      { id: 'ref_p243', name: 'p243 (M)', wav: `${BASE}/assets/ref/p243_023.wav`, note: 'Male reference' },
-      { id: 'ref_p230', name: 'p230 (F)', wav: `${BASE}/assets/ref/p230_023.wav`, note: 'Female reference' },
-      { id: 'ref_p231', name: 'p254 (M)', wav: `${BASE}/assets/ref/p254_023.wav`, note: 'Male reference' },
-      { id: 'ref_p240', name: 'p233 (F)', wav: `${BASE}/assets/ref/p233_023.wav`, note: 'Female reference' },
-      { id: 'ref_p245', name: 'p258 (M)', wav: `${BASE}/assets/ref/p258_023.wav`, note: 'Male reference' },
-      { id: 'ref_p248', name: 'p236 (F)', wav: `${BASE}/assets/ref/p236_023.wav`, note: 'Female reference' },
-      { id: 'ref_p251', name: 'p259 (M)', wav: `${BASE}/assets/ref/p259_023.wav`, note: 'Male reference' },
-      { id: 'ref_p253', name: 'p244 (F)', wav: `${BASE}/assets/ref/p244_023.wav`, note: 'Female reference' },
-      { id: 'ref_p256', name: 'p273 (M)', wav: `${BASE}/assets/ref/p273_023.wav`, note: 'Male reference' },
+      { id: 'ref_p228', name: 'p228 (F)', wav: asset('assets/ref/p228_023.wav'), note: 'Female reference' },
+      { id: 'ref_p243', name: 'p243 (M)', wav: asset('assets/ref/p243_023.wav'), note: 'Male reference' },
+      { id: 'ref_p230', name: 'p230 (F)', wav: asset('assets/ref/p230_023.wav'), note: 'Female reference' },
+      { id: 'ref_p231', name: 'p254 (M)', wav: asset('assets/ref/p254_023.wav'), note: 'Male reference' },
+      { id: 'ref_p240', name: 'p233 (F)', wav: asset('assets/ref/p233_023.wav'), note: 'Female reference' },
+      { id: 'ref_p245', name: 'p258 (M)', wav: asset('assets/ref/p258_023.wav'), note: 'Male reference' },
+      { id: 'ref_p248', name: 'p236 (F)', wav: asset('assets/ref/p236_023.wav'), note: 'Female reference' },
+      { id: 'ref_p251', name: 'p259 (M)', wav: asset('assets/ref/p259_023.wav'), note: 'Male reference' },
+      { id: 'ref_p253', name: 'p244 (F)', wav: asset('assets/ref/p244_023.wav'), note: 'Female reference' },
+      { id: 'ref_p256', name: 'p273 (M)', wav: asset('assets/ref/p273_023.wav'), note: 'Male reference' },
     ];
 
-    // type: 'real' | 'tts' | 'vc'
+    // dataset samples
     const datasetSamples = [
       {
         dataset: 'Train-clean-100', type: 'real', items: [
-          { id: 'real_utt01', name: 'Real sample 1', wav: `${BASE}/assets/audio_samples/19-198-0003-Real.wav`, tg: `${BASE}/assets/textgrid_samples/19-198-0003-Real.TextGrid` },
-          { id: 'real_utt02', name: 'Real sample 2', wav: `${BASE}/assets/audio_samples/19-198-0005-Real.wav`, tg: `${BASE}/assets/textgrid_samples/19-198-0005-Real.TextGrid` },
+          { id: 'real_utt01', name: 'Real sample 1', wav: asset('assets/audio_samples/19-198-0003-Real.wav'), tg: asset('assets/textgrid_samples/19-198-0003-Real.TextGrid') },
+          { id: 'real_utt02', name: 'Real sample 2', wav: asset('assets/audio_samples/19-198-0005-Real.wav'), tg: asset('assets/textgrid_samples/19-198-0005-Real.TextGrid') },
         ]
       },
       {
         dataset: 'Melo TTS', type: 'tts', items: [
-          { id: 'melo_01', name: 'Sample 1', wav: `${BASE}/assets/audio_samples/19-198-0003-MeloTTS.wav`, tg: `${BASE}/assets/textgrid_samples/19-198-0003-MeloTTS.TextGrid` },
-          { id: 'melo_01', name: 'Sample 2', wav: `${BASE}/assets/audio_samples/19-198-0005-MeloTTS.wav`, tg: `${BASE}/assets/textgrid_samples/19-198-0005-MeloTTS.TextGrid` }
+          { id: 'melo_01', name: 'Sample 1', wav: asset('assets/audio_samples/19-198-0003-MeloTTS.wav'), tg: asset('assets/textgrid_samples/19-198-0003-MeloTTS.TextGrid') },
+          { id: 'melo_02', name: 'Sample 2', wav: asset('assets/audio_samples/19-198-0005-MeloTTS.wav'), tg: asset('assets/textgrid_samples/19-198-0005-MeloTTS.TextGrid') }
         ]
       },
       {
         dataset: 'XTTS v2', type: 'tts', items: [
-          { id: 'xtts_01', name: 'Sample 1', wav: `${BASE}/assets/audio_samples/19-198-0003-XTTSv2.wav`, tg: `${BASE}/assets/textgrid_samples/19-198-0003-XTTSv2.TextGrid` },
-          { id: 'xtts_01', name: 'Sample 2', wav: `${BASE}/assets/audio_samples/19-198-0005-XTTSv2.wav`, tg: `${BASE}/assets/textgrid_samples/19-198-0005-XTTSv2.TextGrid` }
+          { id: 'xtts_01', name: 'Sample 1', wav: asset('assets/audio_samples/19-198-0003-XTTSv2.wav'), tg: asset('assets/textgrid_samples/19-198-0003-XTTSv2.TextGrid') },
+          { id: 'xtts_02', name: 'Sample 2', wav: asset('assets/audio_samples/19-198-0005-XTTSv2.wav'), tg: asset('assets/textgrid_samples/19-198-0005-XTTSv2.TextGrid') }
         ]
       },
       {
         dataset: 'Chatterbox TTS', type: 'tts', items: [
-          { id: 'chtts_01', name: 'Sample 1', wav: `${BASE}/assets/audio_samples/19-198-0003-ChTTS.wav`, tg: `${BASE}/assets/textgrid_samples/19-198-0003-ChTTS.TextGrid` },
-          { id: 'chtts_01', name: 'Sample 2', wav: `${BASE}/assets/audio_samples/19-198-0005-ChTTS.wav`, tg: `${BASE}/assets/textgrid_samples/19-198-0005-ChTTS.TextGrid` }
+          { id: 'chtts_01', name: 'Sample 1', wav: asset('assets/audio_samples/19-198-0003-ChTTS.wav'), tg: asset('assets/textgrid_samples/19-198-0003-ChTTS.TextGrid') },
+          { id: 'chtts_02', name: 'Sample 2', wav: asset('assets/audio_samples/19-198-0005-ChTTS.wav'), tg: asset('assets/textgrid_samples/19-198-0005-ChTTS.TextGrid') }
         ]
       },
       {
         dataset: 'VITS', type: 'tts', items: [
-          { id: 'vits_01', name: 'Sample 1', wav: `${BASE}/assets/audio_samples/19-198-0003-vitsTTS.wav`, tg: `${BASE}/assets/textgrid_samples/19-198-0003-vitsTTS.TextGrid` },
-          { id: 'vits_01', name: 'Sample 2', wav: `${BASE}/assets/audio_samples/19-198-0005-vitsTTS.wav`, tg: `${BASE}/assets/textgrid_samples/19-198-0005-vitsTTS.TextGrid` }
+          { id: 'vits_01', name: 'Sample 1', wav: asset('assets/audio_samples/19-198-0003-vitsTTS.wav'), tg: asset('assets/textgrid_samples/19-198-0003-vitsTTS.TextGrid') },
+          { id: 'vits_02', name: 'Sample 2', wav: asset('assets/audio_samples/19-198-0005-vitsTTS.wav'), tg: asset('assets/textgrid_samples/19-198-0005-vitsTTS.TextGrid') }
         ]
       },
       {
         dataset: 'Chatterbox VC', type: 'vc', items: [
-          { id: 'chvc_01', name: 'Sample 1', wav: `${BASE}/assets/audio_samples/19-198-0003-ChVC.wav`, tg: `${BASE}/assets/textgrid_samples/19-198-0003-ChVC.TextGrid` },
-          { id: 'chvc_01', name: 'Sample 2', wav: `${BASE}/assets/audio_samples/19-198-0005-ChVC.wav`, tg: `${BASE}/assets/textgrid_samples/19-198-0005-ChVC.TextGrid` }
+          { id: 'chvc_01', name: 'Sample 1', wav: asset('assets/audio_samples/19-198-0003-ChVC.wav'), tg: asset('assets/textgrid_samples/19-198-0003-ChVC.TextGrid') },
+          { id: 'chvc_02', name: 'Sample 2', wav: asset('assets/audio_samples/19-198-0005-ChVC.wav'), tg: asset('assets/textgrid_samples/19-198-0005-ChVC.TextGrid') }
         ]
       },
       {
         dataset: 'FreeVC', type: 'vc', items: [
-          { id: 'freevc_01', name: 'Sample 1', wav: `${BASE}/assets/audio_samples/19-198-0003-FreeVC.wav`, tg: `${BASE}/assets/textgrid_samples/19-198-0003-FreeVC.TextGrid` },
-          { id: 'freevc_01', name: 'Sample 2', wav: `${BASE}/assets/audio_samples/19-198-0005-FreeVC.wav`, tg: `${BASE}/assets/textgrid_samples/19-198-0005-FreeVC.TextGrid` }
+          { id: 'freevc_01', name: 'Sample 1', wav: asset('assets/audio_samples/19-198-0003-FreeVC.wav'), tg: asset('assets/textgrid_samples/19-198-0003-FreeVC.TextGrid') },
+          { id: 'freevc_02', name: 'Sample 2', wav: asset('assets/audio_samples/19-198-0005-FreeVC.wav'), tg: asset('assets/textgrid_samples/19-198-0005-FreeVC.TextGrid') }
         ]
       },
       {
         dataset: 'StarGAN-VC', type: 'vc', items: [
-          { id: 'stargan_01', name: 'Sample 1', wav: `${BASE}/assets/audio_samples/19-198-0003-sgVC.wav`, tg: `${BASE}/assets/textgrid_samples/19-198-0003-sgVC.TextGrid` },
-          { id: 'stargan_01', name: 'Sample 2', wav: `${BASE}/assets/audio_samples/19-198-0005-sgVC.wav`, tg: `${BASE}/assets/textgrid_samples/19-198-0005-sgVC.TextGrid` }
+          { id: 'stargan_01', name: 'Sample 1', wav: asset('assets/audio_samples/19-198-0003-sgVC.wav'), tg: asset('assets/textgrid_samples/19-198-0003-sgVC.TextGrid') },
+          { id: 'stargan_02', name: 'Sample 2', wav: asset('assets/audio_samples/19-198-0005-sgVC.wav'), tg: asset('assets/textgrid_samples/19-198-0005-sgVC.TextGrid') }
         ]
       },
     ];
@@ -216,8 +229,7 @@
               <p class="text-sm text-slate-600">${subtitle || ''}</p>
             </div>
           </div>
-          <audio controls class="mt-3 w-full" preload="none">
-            <source src="${wav}" type="audio/wav" />
+          <audio controls class="mt-3 w-full" preload="none" src="${wav}">
             Your browser does not support the audio element.
           </audio>
           <div class="mt-3 flex flex-wrap gap-2">${chips.map(c => `<span class="badge">${c}</span>`).join('')}</div>
@@ -235,9 +247,7 @@
             </div>
             <span class="pill">${ds.dataset}</span>
           </div>
-          <audio controls class="mt-2 w-full" preload="none">
-            <source src="${it.wav}" type="audio/wav" />
-          </audio>
+          <audio controls class="mt-2 w-full" preload="none" src="${it.wav}"></audio>
           <div class="mt-2 flex items-center gap-2 text-sm">
             <a class="underline text-indigo-700" href="${it.tg}" target="_blank">TextGrid</a>
             <button class="text-indigo-700 underline" onclick="loadIntoViewer('${it.wav}','${it.tg}')">Open in viewer</button>
@@ -263,8 +273,7 @@
       refGrid.innerHTML = referenceVoices.map(r => audioCard({
         title: r.name,
         subtitle: r.note,
-        wav: r.wav,
-        //chips: ['Reference', '16 kHz']
+        wav: r.wav
       })).join('');
 
       // Render datasets
@@ -285,17 +294,14 @@
     }
 
     function parseTextGrid(txt) {
-      // Very lightweight parser for IntervalTiers: name, xmin, xmax, intervals [xmin,xmax,text]
       const lines = txt.split(/\r?\n/);
       const tiers = [];
       let i = 0;
       while (i < lines.length) {
         const line = lines[i].trim();
         if (line.startsWith('class = "IntervalTier"')) {
-          // Find name, xmin, xmax
           let name = 'Tier';
           let xmin = 0, xmax = 0;
-          // Next lines contain name, xmin, xmax in any order
           for (let k = 1; k <= 6 && i + k < lines.length; k++) {
             const s = lines[i + k].trim();
             if (s.startsWith('name =')) name = s.split('=')[1].trim().replace(/^"|"$/g, '');
@@ -303,13 +309,10 @@
             if (s.startsWith('xmax =')) xmax = parseFloat(s.split('=')[1]);
             if (s.startsWith('intervals: size =')) { i = i + k; break; }
           }
-          // intervals
           const sizeLine = lines[i].trim();
           const size = parseInt(sizeLine.split('=')[1]);
           const intervals = [];
           for (let n = 0; n < size; n++) {
-            // Expect lines like: intervals [n]:, xmin = x, xmax = y, text = "..."
-            // Advance until 'xmin' found
             while (++i < lines.length && !lines[i].includes('xmin =')) {}
             const xminV = parseFloat(lines[i].split('=')[1]);
             while (++i < lines.length && !lines[i].includes('xmax =')) {}
@@ -334,7 +337,6 @@
     }
 
     async function createWave(audioUrl) {
-      // Cleanup previous
       if (ws) { ws.destroy(); }
       ws = WaveSurfer.create({
         container: '#wave',
@@ -344,13 +346,11 @@
         cursorColor: '#111827',
         url: audioUrl,
       });
-      // Add regions plugin (for tiers/intervals)
       ws.regions = ws.registerPlugin(Regions.create());
       return new Promise(resolve => ws.on('ready', resolve));
     }
 
     function colorForTier(name) {
-      // Simple hashing into a pastel color
       let h = 0; for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) % 360;
       return `hsla(${h}, 80%, 80%, 0.4)`;
     }
@@ -358,13 +358,11 @@
     async function addTextGrid(url) {
       const text = await fetchText(url);
       const tiers = parseTextGrid(text);
-      // Clear previous regions
       ws.regions.getRegions().forEach(r => r.remove());
       const T = document.getElementById('tiers');
       T.innerHTML = '';
 
-      tiers.forEach((tier, idx) => {
-        // Controls row per tier
+      tiers.forEach((tier) => {
         const row = document.createElement('div');
         row.className = 'flex items-center gap-2';
         const label = document.createElement('span');
@@ -380,7 +378,6 @@
         tier.intervals.forEach(iv => {
           if (isFinite(iv.xmin) && isFinite(iv.xmax) && iv.xmax > iv.xmin) {
             ws.regions.addRegion({ start: iv.xmin, end: iv.xmax, content: iv.text || '', color, drag: false, resize: false });
-            // Tiny chips list for quick scan
             const c = document.createElement('span');
             c.className = 'badge';
             c.textContent = iv.text || '∅';
