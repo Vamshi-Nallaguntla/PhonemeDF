@@ -4,13 +4,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PhonemeDF Synthetic Dataset</title>
-  <!-- Tailwind via CDN for quick styling (no build step) -->
+
+  <!-- Tailwind via CDN for quick styling -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide icons -->
+
+  <!-- Lucide icons (optional) -->
   <script type="module">
     import { createIcons, Play, Pause, Volume2 } from "https://cdn.jsdelivr.net/npm/lucide@0.469.0/+esm";
     window.addEventListener('DOMContentLoaded', () => createIcons());
   </script>
+
   <!-- Wavesurfer.js for waveform + regions -->
   <script src="https://unpkg.com/wavesurfer.js@7"></script>
   <script src="https://unpkg.com/wavesurfer.js@7/dist/plugins/regions.min.js"></script>
@@ -18,7 +21,7 @@
   <style>
     /* Subtle card shadow */
     .card { box-shadow: 0 10px 20px rgba(0,0,0,0.06); }
-    /* Replace Tailwind @apply with plain CSS for CDN mode */
+    /* Tailwind @apply won't work in CDN mode, so we write plain CSS */
     .badge {
       font-size: 0.75rem; line-height: 1rem;
       padding: 0.125rem 0.5rem; border-radius: 9999px;
@@ -34,11 +37,22 @@
   </style>
 
   <script>
-    // Build absolute URLs that work on 4open (and other static hosts)
+    /* Build absolute URLs that work on 4open (and any static host) */
     const ROOT = new URL('.', window.location.href).toString();
     const asset = (p) => new URL(String(p).replace(/^\/+/, ''), ROOT).toString();
+
+    /* Stabilize native <audio> controls: load metadata then "nudge" time */
+    function enhanceAudio(el) {
+      if (!el) return;
+      el.preload = 'metadata';          // avoid big upfront loads/layout thrash
+      el.crossOrigin = 'anonymous';     // safe on same-origin static hosting
+      el.addEventListener('loadedmetadata', () => {
+        try { if (el.currentTime === 0) el.currentTime = 0.001; } catch {}
+      }, { once: true });
+    }
   </script>
 </head>
+
 <body class="bg-slate-50 text-slate-900">
   <!-- Header -->
   <header class="bg-white sticky top-0 z-50 border-b border-slate-200/60">
@@ -50,7 +64,7 @@
       <nav class="hidden md:flex items-center gap-6 text-sm">
         <a href="#references" class="hover:text-indigo-700">Reference Voices</a>
         <a href="#datasets" class="hover:text-indigo-700">Dataset Samples</a>
-        <a href="#textgrids" class="hover:text-indigo-700">TextGrid Views</a>
+        <a href="#textgrids" class="hover:text-indigo-700">TextGrid Viewer</a>
         <a href="#howto" class="hover:text-indigo-700">How to Use</a>
       </nav>
     </div>
@@ -62,12 +76,12 @@
       <div>
         <h2 class="text-3xl font-bold tracking-tight mb-3">Example Audios • Example TextGrids</h2>
         <p class="text-slate-700 leading-relaxed">
-          This page shows examples from the <span class="font-semibold">PhonemeDF</span> project: the ten reference voices, per-dataset samples (real & synthetic), and downloadable example 
+          This page shows examples from the <span class="font-semibold">PhonemeDF</span> project: the ten reference voices, per-dataset samples (real & synthetic), and downloadable
           <span class="font-semibold">TextGrids</span>.
         </p>
         <div class="flex flex-wrap gap-2 mt-4" aria-label="Audio and TextGrid Info Badges">
-          <span class="badge" title="All audio examples are in 16 kHz mono WAV format">Audios are in 16 kHz wav format</span>
-          <span class="badge" title="TextGrids generated using Montreal Forced Aligner (MFA)">TextGrids are from MFA</span>
+          <span class="badge" title="All audio examples are in 16 kHz mono WAV format">16 kHz WAV</span>
+          <span class="badge" title="TextGrids generated using Montreal Forced Aligner (MFA)">TextGrids via MFA</span>
         </div>
       </div>
       <div class="bg-white p-6 rounded-2xl card">
@@ -104,20 +118,21 @@
   <section id="textgrids" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="flex items-end justify-between mb-4">
       <h3 class="text-2xl font-bold">Interactive Waveform Viewer</h3>
-      <span class="pill">Waveform</span>
     </div>
 
     <div class="bg-white rounded-2xl card p-4">
       <div class="grid md:grid-cols-5 gap-3 items-end">
         <div class="md:col-span-2">
           <label class="text-sm font-medium">Audio (WAV, 16 kHz)</label>
-          <!-- removed leading slash -->
-          <input id="tgAudio" type="text" class="mt-1 w-full rounded-xl border-slate-300 focus:ring-indigo-500 focus:border-indigo-500" placeholder="assets/examples/utt01.wav" />
+          <!-- no leading slash -->
+          <input id="tgAudio" type="text" class="mt-1 w-full rounded-xl border-slate-300 focus:ring-indigo-500 focus:border-indigo-500"
+                 placeholder="assets/textgrid_samples/utt01.wav" />
         </div>
         <div class="md:col-span-2">
           <label class="text-sm font-medium">TextGrid</label>
-          <!-- removed leading slash -->
-          <input id="tgFile" type="text" class="mt-1 w-full rounded-xl border-slate-300 focus:ring-indigo-500 focus:border-indigo-500" placeholder="assets/examples/utt01.TextGrid" />
+          <!-- no leading slash -->
+          <input id="tgFile" type="text" class="mt-1 w-full rounded-xl border-slate-300 focus:ring-indigo-500 focus:border-indigo-500"
+                 placeholder="assets/textgrid_samples/utt01.TextGrid" />
         </div>
         <button id="tgLoad" class="md:col-span-1 h-10 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700">Load</button>
       </div>
@@ -133,7 +148,7 @@
   <section id="howto" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <div class="bg-white rounded-2xl card p-6">
       <h3 class="text-2xl font-bold mb-2">How to Use & Cite</h3>
-      <p class="text-slate-700">We will update this once accepted.</p>
+      <p class="text-slate-700">We’ll share the dataset link and citation after acceptance.</p>
     </div>
   </section>
 
@@ -143,9 +158,7 @@
 
   <!-- ===================== DATA ===================== -->
   <script>
-    // NO BASE needed. Use asset('assets/...') everywhere.
-
-    // 10 reference voices
+    // Reference voices (update files present in assets/ref/)
     const referenceVoices = [
       { id: 'ref_p228', name: 'p228 (F)', wav: asset('assets/ref/p228_023.wav'), note: 'Female reference' },
       { id: 'ref_p243', name: 'p243 (M)', wav: asset('assets/ref/p243_023.wav'), note: 'Male reference' },
@@ -159,7 +172,7 @@
       { id: 'ref_p256', name: 'p273 (M)', wav: asset('assets/ref/p273_023.wav'), note: 'Male reference' },
     ];
 
-    // dataset samples
+    // Dataset samples
     const datasetSamples = [
       {
         dataset: 'Train-clean-100', type: 'real', items: [
@@ -216,11 +229,13 @@
   <script>
     const byTypeColor = (t) => ({
       real: 'bg-emerald-50 border-emerald-200',
-      tts: 'bg-indigo-50 border-indigo-200',
-      vc: 'bg-amber-50 border-amber-200',
+      tts:  'bg-indigo-50 border-indigo-200',
+      vc:   'bg-amber-50 border-amber-200',
     })[t] || 'bg-slate-50 border-slate-200';
 
     function audioCard({ title, subtitle, wav, chips = [] }) {
+      const id = 'aud_' + Math.random().toString(36).slice(2);
+      // Put the element in the DOM first, then enhance it
       return `
         <div class="bg-white rounded-2xl card p-4 border border-slate-200">
           <div class="flex items-center justify-between">
@@ -229,31 +244,34 @@
               <p class="text-sm text-slate-600">${subtitle || ''}</p>
             </div>
           </div>
-          <audio controls class="mt-3 w-full" preload="none" src="${wav}">
-            Your browser does not support the audio element.
-          </audio>
+          <audio id="${id}" controls class="mt-3 w-full" src="${wav}"></audio>
           <div class="mt-3 flex flex-wrap gap-2">${chips.map(c => `<span class="badge">${c}</span>`).join('')}</div>
+          <script>enhanceAudio(document.getElementById('${id}'));</script>
         </div>`;
     }
 
     function datasetCard(ds) {
       const color = byTypeColor(ds.type);
-      const items = ds.items.map(it => `
-        <div class="bg-white rounded-xl p-3 border border-slate-200">
-          <div class="flex items-center justify-between">
-            <div>
-              <h5 class="font-medium">${it.name}</h5>
-              <p class="text-xs text-slate-600 mt-0.5">${it.text || ''}</p>
+      const items = ds.items.map(it => {
+        const id = 'aud_' + Math.random().toString(36).slice(2);
+        return `
+          <div class="bg-white rounded-xl p-3 border border-slate-200">
+            <div class="flex items-center justify-between">
+              <div>
+                <h5 class="font-medium">${it.name}</h5>
+                <p class="text-xs text-slate-600 mt-0.5">${it.text || ''}</p>
+              </div>
+              <span class="pill">${ds.dataset}</span>
             </div>
-            <span class="pill">${ds.dataset}</span>
+            <audio id="${id}" controls class="mt-2 w-full" src="${it.wav}"></audio>
+            <script>enhanceAudio(document.getElementById('${id}'));</script>
+            <div class="mt-2 flex items-center gap-2 text-sm">
+              <a class="underline text-indigo-700" href="${it.tg}" target="_blank">TextGrid</a>
+              <button class="text-indigo-700 underline" onclick="loadIntoViewer('${it.wav}','${it.tg}')">Open in viewer</button>
+            </div>
           </div>
-          <audio controls class="mt-2 w-full" preload="none" src="${it.wav}"></audio>
-          <div class="mt-2 flex items-center gap-2 text-sm">
-            <a class="underline text-indigo-700" href="${it.tg}" target="_blank">TextGrid</a>
-            <button class="text-indigo-700 underline" onclick="loadIntoViewer('${it.wav}','${it.tg}')">Open in viewer</button>
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
 
       return `
         <div class="rounded-2xl card p-4 border ${color}">
@@ -267,18 +285,10 @@
 
     function renderAll() {
       document.getElementById('yr').textContent = new Date().getFullYear();
-
-      // Render references
-      const refGrid = document.getElementById('refGrid');
-      refGrid.innerHTML = referenceVoices.map(r => audioCard({
-        title: r.name,
-        subtitle: r.note,
-        wav: r.wav
-      })).join('');
-
-      // Render datasets
-      const dsGrid = document.getElementById('dsGrid');
-      dsGrid.innerHTML = datasetSamples.map(datasetCard).join('');
+      document.getElementById('refGrid').innerHTML = referenceVoices.map(r =>
+        audioCard({ title: r.name, subtitle: r.note, wav: r.wav })
+      ).join('');
+      document.getElementById('dsGrid').innerHTML = datasetSamples.map(datasetCard).join('');
     }
 
     document.addEventListener('DOMContentLoaded', renderAll);
@@ -286,7 +296,7 @@
 
   <!-- ===================== TEXTGRID PARSER + VIEWER ===================== -->
   <script>
-    // Minimal TextGrid parser (works for Praat ASCII TextGrid files)
+    // Minimal TextGrid parser (Praat ASCII)
     async function fetchText(url) {
       const res = await fetch(url);
       if (!res.ok) throw new Error(`Failed to fetch ${url}`);
@@ -331,7 +341,7 @@
     let ws;
     async function loadIntoViewer(audioUrl, tgUrl) {
       document.getElementById('tgAudio').value = audioUrl;
-      document.getElementById('tgFile').value = tgUrl;
+      document.getElementById('tgFile').value  = tgUrl;
       await createWave(audioUrl);
       await addTextGrid(tgUrl);
     }
@@ -345,6 +355,8 @@
         progressColor: '#4f46e5',
         cursorColor: '#111827',
         url: audioUrl,
+        normalize: true,
+        minPxPerSec: 50
       });
       ws.regions = ws.registerPlugin(Regions.create());
       return new Promise(resolve => ws.on('ready', resolve));
