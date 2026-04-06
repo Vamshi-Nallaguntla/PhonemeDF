@@ -51,14 +51,25 @@ To check out the PhonemeDF demo, click the **Website** button in the top-right.
 Listen to real vs. synthetic samples, the reference voices we used, and browse example TextGrids.  
 To inspect alignments, download files from `assets/textgrid_samples/` and open them in **Praat** (or any TextGrid viewer).
 
+---
+
+## Dataset Download
+
+The PhonemeDF dataset is publicly available on Kaggle:
+https://www.kaggle.com/datasets/nallaguntlavamshi/phonemedf
 
 
 ---
 
 ## How to Use and Cite
 
-The dataset, code and citation details will be shared here once our paper is accepted.  
-Stay tuned for the official release!
+arXiv Paper Link: https://arxiv.org/abs/2603.15037
+
+DOI: https://doi.org/10.48550/arXiv.2603.15037
+
+Dataset sample page: https://vamshi-nallaguntla.github.io/PhonemeDF/
+
+
 
 ---
 
