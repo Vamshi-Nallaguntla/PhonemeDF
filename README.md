@@ -43,16 +43,6 @@ The figure below shows an example TextGrid visualization on Praat from PhonemeDF
 
 ---
 
-
-## Demo Website
-
-To check out the PhonemeDF demo, click the **Website** button in the top-right.
-
-Listen to real vs. synthetic samples, the reference voices we used, and browse example TextGrids.  
-To inspect alignments, download files from `assets/textgrid_samples/` and open them in **Praat** (or any TextGrid viewer).
-
----
-
 ## Dataset Download
 
 The PhonemeDF dataset is publicly available on Kaggle:
