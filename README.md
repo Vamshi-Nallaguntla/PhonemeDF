@@ -1,10 +1,10 @@
 # PhonemeDF
-This repository shows samples from **PhonemeDF**, a phoneme-level dataset framework created using the recent **TTS (Text-to-Speech)** and **VC (Voice Conversion)** systems.
+This repository shows samples from **PhonemeDF**, a phoneme-level dataset framework created using the recent TTS (Text-to-Speech) and VC (Voice Conversion) systems.
 
 ---
 
 ## Block Diagram
-![Block Diagram](assets/textgrid_samples/final_datasets_block_diagram.png)
+![Block Diagram](assets/textgrid_samples/dataset_creation_pipeline.jpg)
 
 ---
 
@@ -43,11 +43,35 @@ The figure below shows an example TextGrid visualization on Praat from PhonemeDF
 
 ---
 
+## Evaluation Pipeline
+![Block Diagram](assets/textgrid_samples/evaluation_pipeline.jpg)
+
+---
+
 ## Dataset Download
 
-The PhonemeDF dataset is publicly available on Kaggle:
+The PhonemeDF dataset is publicly available:
+
+### Zenodo (official DOI)
+https://doi.org/10.5281/zenodo.19362790
+
+### Kaggle
 https://www.kaggle.com/datasets/nallaguntlavamshi/phonemedf
 
+---
+
+### Download Note
+
+- On **Zenodo**, each system is provided separately:
+  - Individual TTS systems (MeloTTS, XTTS v2, Chatterbox TTS, VITS)
+  - Individual VC systems (Chatterbox VC, FreeVC, StarGAN VC)
+
+- On **Kaggle**, synthetic data is grouped for convenience:
+  - All TTS systems are provided in a single archive
+  - All VC systems are provided in a single archive
+
+-- Use **Zenodo** if you need system-specific downloads or for citation   
+-- Use **Kaggle** for quick full dataset access
 
 ---
 
@@ -55,7 +79,7 @@ https://www.kaggle.com/datasets/nallaguntlavamshi/phonemedf
 
 arXiv Paper Link: https://arxiv.org/abs/2603.15037
 
-DOI: https://doi.org/10.48550/arXiv.2603.15037
+Paper DOI: https://doi.org/10.48550/arXiv.2603.15037
 
 Dataset sample page: https://vamshi-nallaguntla.github.io/PhonemeDF/
 
