@@ -75,7 +75,7 @@ https://www.kaggle.com/datasets/nallaguntlavamshi/phonemedf
 
 ---
 
-## How to Use and Cite
+## Important links
 
 arXiv Paper Link: https://arxiv.org/abs/2603.15037
 
@@ -86,4 +86,16 @@ Dataset sample page: https://vamshi-nallaguntla.github.io/PhonemeDF/
 
 
 ---
+## Citation
 
+If you use this dataset in your research, please cite:
+
+```bibtex
+@article{nallaguntla2026phonemedf,
+  title={PhonemeDF: A Synthetic Speech Dataset for Audio Deepfake Detection and Naturalness Evaluation},
+  author={Nallaguntla, Vamshi and Fursule, Aishwarya and Kshirsagar, Shruti and Avila, Anderson R},
+  journal={arXiv preprint arXiv:2603.15037},
+  year={2026}
+}
+```
+---
